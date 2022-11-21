@@ -10,25 +10,21 @@ const Searchbar = ({ onSubmit }) => {
     resetForm();
   };
 
-  const searchStringIsEmpty = (values, _) => {
-    console.log('values :>> ', values);
-  };
-
   return (
     <header className="searchbar">
       <Formik initialValues={{ searchingThing: '' }} onSubmit={handlerSubmit}>
         {/* Parttern  "Render props" */}
         {props => {
+          const searchStringIsEmpty =
+            props.values.searchingThing === '' || props.isSubmitting;
+
           return (
             <Form className="form">
               <button
                 type="submit"
                 className="button"
                 area-label="Search button"
-                disabled={
-                  props.values.searchingThing === '' || props.isSubmitting
-                }
-                onClick={searchStringIsEmpty}
+                disabled={searchStringIsEmpty}
               >
                 <span className="button-label">Search</span>
               </button>

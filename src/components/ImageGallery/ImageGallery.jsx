@@ -1,5 +1,7 @@
 // import PropTypes from 'prop-types';
+import Button from 'components/Button';
 import React, { PureComponent } from 'react';
+import { fetchData } from '../../services';
 
 const mashineStatus = {
   IDLE: 'idle',
@@ -10,7 +12,6 @@ const mashineStatus = {
 export default class ImageGallery extends PureComponent {
   // static propTypes = {second: third}
   state = {
-    searchRequest: '',
     searchData: '[]',
     page: 1,
     status: mashineStatus.IDLE,
@@ -18,32 +19,24 @@ export default class ImageGallery extends PureComponent {
 
   nextPage = () => {
     console.log('Load next');
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
-  // componentDidMount() {
-  //   // this.setState({ status: mashineStatus.IDLE });
-  //   console.log('mount');
-  // }
-
-  componentDidUpdate(prevProps, prevState) {
-    console.log('Update');
-
-    // console.log('prevProps :>> ', prevProps);
-
+  async componentDidUpdate(prevProps, prevState) {
     if (prevProps.searchString !== this.props.searchString) {
-      console.log('set state');
+      // console.log('set state');
+      console.log('Update');
 
       this.setState({
         status: mashineStatus.LOADING,
-        searchRequest: this.props.searchString,
       });
 
-      setTimeout(() => {
+      setTimeout(async () => {
         this.setState({
           status: mashineStatus.SUCCESSFULLY,
-          searchData: '[ some data ]',
+          searchData: await fetchData(this.props.searchString, this.state.page),
         });
-      }, 2000);
+      }, 500);
     }
 
     // console.log(`galery updated ${this.props.searchString}`);
@@ -62,14 +55,17 @@ export default class ImageGallery extends PureComponent {
     }
 
     if (status === mashineStatus.LOADING) {
-      return <div>Loading...</div>;
+      return <div>Loading {searchRequest}...</div>;
     }
 
     if (status === mashineStatus.SUCCESSFULLY) {
       return (
-        <div>
-          I find: {searchData} by request: {searchString}
-        </div>
+        <>
+          <div>
+            I find: {searchData.totalHits} items by request: {searchString}
+          </div>
+          <Button onClick={this.nextPage} />
+        </>
       );
     }
 
