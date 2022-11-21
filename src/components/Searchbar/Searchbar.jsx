@@ -7,7 +7,6 @@ const Searchbar = ({ onSubmit }) => {
     //   console.log('props :>> ', onSubmit);
 
     onSubmit(values);
-    resetForm();
   };
 
   return (
@@ -15,8 +14,7 @@ const Searchbar = ({ onSubmit }) => {
       <Formik initialValues={{ searchingThing: '' }} onSubmit={handlerSubmit}>
         {/* Parttern  "Render props" */}
         {props => {
-          const searchStringIsEmpty =
-            props.values.searchingThing === '' || props.isSubmitting;
+          const searchStringIsEmpty = props.values.searchingThing === '';
 
           return (
             <Form className="form">

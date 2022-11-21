@@ -24,20 +24,20 @@ export default class ImageGallery extends PureComponent {
 
   async componentDidUpdate(prevProps, prevState) {
     if (prevProps.searchString !== this.props.searchString) {
-      // console.log('set state');
-      console.log('Update');
+      // console.log('Update');
 
       this.setState({
         status: mashineStatus.LOADING,
+        page: 1,
       });
-
-      setTimeout(async () => {
-        this.setState({
-          status: mashineStatus.SUCCESSFULLY,
-          searchData: await fetchData(this.props.searchString, this.state.page),
-        });
-      }, 500);
     }
+
+    setTimeout(async () => {
+      this.setState({
+        status: mashineStatus.SUCCESSFULLY,
+        searchData: await fetchData(this.props.searchString, this.state.page),
+      });
+    }, 1500);
 
     // console.log(`galery updated ${this.props.searchString}`);
   }
