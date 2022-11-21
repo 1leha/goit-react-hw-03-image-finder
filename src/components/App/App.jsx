@@ -1,15 +1,16 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 
 import { Box } from 'components/Box';
 import { AppStyled } from './App.styled';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery';
 
-export class App extends Component {
-  state = { searchString: '' };
+export class App extends PureComponent {
+  state = { searchingThing: '' };
 
   handleSerch = ({ searchingThing }) => {
-    console.log('searchingThing :>> ', searchingThing);
+    // console.log('searchingThing :>> ', searchingThing);
+    this.setState({ searchingThing });
   };
 
   render() {
@@ -25,7 +26,7 @@ export class App extends Component {
       >
         <AppStyled>
           <Searchbar onSubmit={this.handleSerch} />
-          <ImageGallery />
+          <ImageGallery searchString={this.state.searchingThing} />
         </AppStyled>
       </Box>
     );

@@ -8,11 +8,25 @@ const Searchbar = ({ onSubmit }) => {
     onSubmit(values);
     resetForm();
   };
+
+  const emptySearchString = values => {
+    console.log(values);
+  };
+
   return (
     <header className="searchbar">
-      <Formik initialValues={{ searchingThing: '' }} onSubmit={handlerSubmit}>
+      <Formik
+        initialValues={{ searchingThing: '' }}
+        onSubmit={handlerSubmit}
+        values={emptySearchString}
+      >
         <Form className="form">
-          <button type="submit" className="button" area-label="Search button">
+          <button
+            type="submit"
+            className="button"
+            area-label="Search button"
+            // disabled={values => values.searchingThing === ''}
+          >
             <span className="button-label">Search</span>
           </button>
 
