@@ -12,9 +12,11 @@ const mashineStatus = {
 export default class ImageGallery extends PureComponent {
   // static propTypes = {second: third}
   state = {
-    searchData: '[]',
+    query: '',
     page: 1,
+    searchData: '[]',
     status: mashineStatus.IDLE,
+    error: null,
   };
 
   nextPage = () => {
@@ -24,22 +26,37 @@ export default class ImageGallery extends PureComponent {
 
   async componentDidUpdate(prevProps, prevState) {
     if (prevProps.searchString !== this.props.searchString) {
-      // console.log('Update');
-
       this.setState({
-        status: mashineStatus.LOADING,
+        query: this.props.searchString,
         page: 1,
+        searchData: '[]',
       });
     }
 
-    setTimeout(async () => {
+    if (
+      prevState.query !== this.state.query ||
+      prevState.page !== this.state.page
+    ) {
       this.setState({
-        status: mashineStatus.SUCCESSFULLY,
-        searchData: await fetchData(this.props.searchString, this.state.page),
+        status: mashineStatus.LOADING,
       });
-    }, 1500);
 
-    // console.log(`galery updated ${this.props.searchString}`);
+      setTimeout(async () => {
+        await fetchData(this.props.searchString, this.state.page)
+          .then(data => {
+            this.setState({
+              status: mashineStatus.SUCCESSFULLY,
+              searchData: data,
+            });
+          })
+          .catch(error => {
+            this.setState({
+              status: mashineStatus.ERROR,
+              error: error,
+            });
+          });
+      }, 500);
+    }
   }
 
   render() {

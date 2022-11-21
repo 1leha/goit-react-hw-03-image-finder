@@ -26,6 +26,7 @@ export class App extends PureComponent {
       >
         <AppStyled>
           <Searchbar onSubmit={this.handleSerch} />
+
           <ImageGallery searchString={this.state.searchingThing} />
         </AppStyled>
       </Box>
