@@ -16,7 +16,7 @@ export default class ImageGallery extends PureComponent {
     page: 1,
     searchData: '[]',
     status: mashineStatus.IDLE,
-    error: null,
+    error: '',
   };
 
   nextPage = () => {
@@ -25,6 +25,7 @@ export default class ImageGallery extends PureComponent {
   };
 
   async componentDidUpdate(prevProps, prevState) {
+    // Reset state when have new query
     if (prevProps.searchString !== this.props.searchString) {
       this.setState({
         query: this.props.searchString,
@@ -33,6 +34,7 @@ export default class ImageGallery extends PureComponent {
       });
     }
 
+    // Check state for changing page number end query
     if (
       prevState.query !== this.state.query ||
       prevState.page !== this.state.page
@@ -41,34 +43,41 @@ export default class ImageGallery extends PureComponent {
         status: mashineStatus.LOADING,
       });
 
-      setTimeout(async () => {
-        await fetchData(this.props.searchString, this.state.page)
-          .then(data => {
-            this.setState({
-              status: mashineStatus.SUCCESSFULLY,
-              searchData: data,
-            });
-          })
-          .catch(error => {
-            this.setState({
-              status: mashineStatus.ERROR,
-              error: error,
-            });
+      await fetchData(this.props.searchString, this.state.page)
+        .then(data => {
+          this.setState({
+            status: mashineStatus.SUCCESSFULLY,
+            searchData: data,
           });
-      }, 500);
+        })
+        .catch(error => {
+          console.log('Catch Error');
+          this.setState({
+            status: mashineStatus.ERROR,
+            error: error,
+          });
+        });
     }
   }
 
   render() {
     const { searchString } = this.props;
-    const { status, searchData, searchRequest } = this.state;
+    const { status, searchData, searchRequest, error } = this.state;
 
+    console.log('status :>> ', status);
+    console.log('error :>> ', error);
     //----------------------------------------------
     // Render mashine
     //----------------------------------------------
 
     if (status === mashineStatus.IDLE) {
-      return <div>Input search param</div>;
+      return (
+        <div>
+          Welcome to my searchin image App! Here, You can find any images you
+          want... And may be, a little more... May be you can find yourself
+          here! ;)
+        </div>
+      );
     }
 
     if (status === mashineStatus.LOADING) {
@@ -87,7 +96,7 @@ export default class ImageGallery extends PureComponent {
     }
 
     if (status === mashineStatus.ERROR) {
-      return <div>ERROR</div>;
+      return <div>{this.state.error}</div>;
     }
   }
 }
