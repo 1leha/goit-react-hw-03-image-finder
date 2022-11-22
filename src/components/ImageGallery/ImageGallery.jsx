@@ -1,5 +1,6 @@
 // import PropTypes from 'prop-types';
 import Button from 'components/Button';
+import ImageGalleryItem from 'components/ImageGalleryItem';
 import React, { PureComponent } from 'react';
 import { fetchData } from '../../services';
 
@@ -20,7 +21,6 @@ export default class ImageGallery extends PureComponent {
   };
 
   nextPage = () => {
-    console.log('Load next');
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
@@ -30,7 +30,8 @@ export default class ImageGallery extends PureComponent {
       this.setState({
         query: this.props.searchString,
         page: 1,
-        searchData: '[]',
+        searchData: [],
+        status: mashineStatus.LOADING,
       });
     }
 
@@ -42,21 +43,20 @@ export default class ImageGallery extends PureComponent {
       this.setState({
         status: mashineStatus.LOADING,
       });
+      console.log();
 
-      await fetchData(this.props.searchString, this.state.page)
-        .then(data => {
-          this.setState({
-            status: mashineStatus.SUCCESSFULLY,
-            searchData: data,
-          });
-        })
-        .catch(error => {
-          console.log('Catch Error');
-          this.setState({
-            status: mashineStatus.ERROR,
-            error: error,
-          });
+      try {
+        const data = await fetchData(this.props.searchString, this.state.page);
+        this.setState({
+          status: mashineStatus.SUCCESSFULLY,
+          searchData: data,
         });
+      } catch (error) {
+        this.setState({
+          status: mashineStatus.ERROR,
+          error: error.code,
+        });
+      }
     }
   }
 
@@ -64,8 +64,6 @@ export default class ImageGallery extends PureComponent {
     const { searchString } = this.props;
     const { status, searchData, searchRequest, error } = this.state;
 
-    console.log('status :>> ', status);
-    console.log('error :>> ', error);
     //----------------------------------------------
     // Render mashine
     //----------------------------------------------
@@ -73,8 +71,8 @@ export default class ImageGallery extends PureComponent {
     if (status === mashineStatus.IDLE) {
       return (
         <div>
-          Welcome to my searchin image App! Here, You can find any images you
-          want... And may be, a little more... May be you can find yourself
+          Welcome to my searchin image App! Here, you can find any images you
+          want... And may be, a little more... May be, you can find yourself
           here! ;)
         </div>
       );
@@ -85,11 +83,19 @@ export default class ImageGallery extends PureComponent {
     }
 
     if (status === mashineStatus.SUCCESSFULLY) {
+      const collection = this.state.searchData.hits;
       return (
         <>
-          <div>
-            I find: {searchData.totalHits} items by request: {searchString}
-          </div>
+          <ul className="gallery">
+            {collection.map(({ id, webformatURL, largeImageURL, tags }) => (
+              <ImageGalleryItem
+                key={id}
+                smallImageURL={webformatURL}
+                fullSizedImageURL={largeImageURL}
+                tags={tags}
+              />
+            ))}
+          </ul>
           <Button onClick={this.nextPage} />
         </>
       );
