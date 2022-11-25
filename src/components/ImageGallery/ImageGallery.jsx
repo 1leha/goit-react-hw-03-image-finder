@@ -61,7 +61,6 @@ export default class ImageGallery extends PureComponent {
   }
 
   render() {
-    const { searchString } = this.props;
     const { status, searchData, searchRequest, error } = this.state;
 
     //----------------------------------------------
@@ -83,7 +82,7 @@ export default class ImageGallery extends PureComponent {
     }
 
     if (status === mashineStatus.SUCCESSFULLY) {
-      const collection = this.state.searchData.hits;
+      const collection = searchData.hits;
       return (
         <>
           <ul className="gallery">
@@ -102,7 +101,7 @@ export default class ImageGallery extends PureComponent {
     }
 
     if (status === mashineStatus.ERROR) {
-      return <div>{this.state.error}</div>;
+      return <div>{error}</div>;
     }
   }
 }

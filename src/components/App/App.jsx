@@ -6,7 +6,10 @@ import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery';
 
 export class App extends PureComponent {
-  state = { searchingThing: '' };
+  state = {
+    searchingThing: '',
+    modalIsOpen: false,
+  };
 
   handleSerch = ({ searchingThing }) => {
     // console.log('searchingThing :>> ', searchingThing);
