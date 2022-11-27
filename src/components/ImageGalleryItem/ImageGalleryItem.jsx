@@ -1,4 +1,4 @@
-import Modal from 'components/Modal';
+import Modal from '../Modal';
 import React, { PureComponent } from 'react';
 
 class ImageGalleryItem extends PureComponent {

@@ -1,33 +1,42 @@
 import React from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik } from 'formik';
+
+import {
+  SearchbarStyled,
+  SearchFormStyled,
+  SearchFormButtonStyled,
+  SearchFormButtonLabelStyled,
+  SearchFormInput,
+} from './Searchbar.styled';
+
+import { BiSearch } from 'react-icons/bi';
 
 const Searchbar = ({ onSubmit }) => {
   const handlerSubmit = (values, { resetForm }) => {
-    // console.log('values :>> ', values);
-    //   console.log('props :>> ', onSubmit);
-
     onSubmit(values);
   };
 
   return (
-    <header className="searchbar">
+    <SearchbarStyled>
       <Formik initialValues={{ searchingThing: '' }} onSubmit={handlerSubmit}>
         {/* Parttern  "Render props" */}
         {props => {
           const searchStringIsEmpty = props.values.searchingThing === '';
 
           return (
-            <Form className="form">
-              <button
+            <SearchFormStyled>
+              <SearchFormButtonStyled
                 type="submit"
-                className="button"
                 area-label="Search button"
                 disabled={searchStringIsEmpty}
               >
-                <span className="button-label">Search</span>
-              </button>
+                <BiSearch size={20} />
+                <SearchFormButtonLabelStyled>
+                  Search
+                </SearchFormButtonLabelStyled>
+              </SearchFormButtonStyled>
 
-              <Field
+              <SearchFormInput
                 className="input"
                 type="text"
                 autoComplete="off"
@@ -35,11 +44,11 @@ const Searchbar = ({ onSubmit }) => {
                 placeholder="Search images and photos"
                 name="searchingThing"
               />
-            </Form>
+            </SearchFormStyled>
           );
         }}
       </Formik>
-    </header>
+    </SearchbarStyled>
   );
 };
 

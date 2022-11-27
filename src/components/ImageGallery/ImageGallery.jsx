@@ -1,6 +1,6 @@
 // import PropTypes from 'prop-types';
-import Button from 'components/Button';
-import ImageGalleryItem from 'components/ImageGalleryItem';
+import Button from '../Button';
+import ImageGalleryItem from '../ImageGalleryItem';
 import React, { PureComponent } from 'react';
 import { fetchData } from '../../services';
 
@@ -11,7 +11,7 @@ const mashineStatus = {
   ERROR: 'error',
 };
 
-const GALLERY_SCROLL_TIMEOUT = 500;
+const GALLERY_SCROLL_TIMEOUT = 1000;
 const galleryScrollOptions = {
   behavior: 'smooth',
   block: 'start',
