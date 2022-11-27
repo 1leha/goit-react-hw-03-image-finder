@@ -13,7 +13,7 @@ import {
   grid,
 } from 'styled-system';
 
-export const Box = styled('div')(
+const Box = styled('div')(
   {
     boxSizing: 'border-box',
   },
@@ -28,3 +28,5 @@ export const Box = styled('div')(
   shadow,
   grid
 );
+
+export default Box;

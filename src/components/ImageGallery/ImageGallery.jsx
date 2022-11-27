@@ -83,8 +83,6 @@ export default class ImageGallery extends PureComponent {
 
     // Check state for changing page number
     if (prevState.page !== this.state.page) {
-      console.log('изменилась страница ');
-
       this.getImages();
 
       // Scrolling next page func

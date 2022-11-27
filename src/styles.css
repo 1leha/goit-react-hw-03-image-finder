@@ -1,4 +1,4 @@
-html {
+/* html {
   box-sizing: border-box;
   width: 100vw;
   overflow-x: hidden;
@@ -24,17 +24,17 @@ img {
   display: block;
   max-width: 100%;
   height: auto;
-}
+} */
 
 /*
  * Стили компонента App
  */
-.App {
+/* .App {
   display: grid;
   grid-template-columns: 1fr;
   grid-gap: 16px;
   padding-bottom: 24px;
-}
+} */
 
 /*
  * Стили компонента Searchbar

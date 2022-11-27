@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 
-import { Box } from 'components/Box';
-import { AppStyled } from './App.styled';
+import Box from 'components/Box';
+import AppStyled from './App.styled';
+import GlobalStyle from '../GlobalStyle';
 import Searchbar from 'components/Searchbar';
 import ImageGallery from 'components/ImageGallery';
 
@@ -12,7 +13,6 @@ export class App extends PureComponent {
   };
 
   handleSerch = ({ searchingThing }) => {
-    // console.log('searchingThing :>> ', searchingThing);
     this.setState({ searchingThing });
   };
 
@@ -27,6 +27,7 @@ export class App extends PureComponent {
       // fontSize="xxl"
       // color="primary"
       >
+        <GlobalStyle />
         <AppStyled>
           <Searchbar onSubmit={this.handleSerch} />
           <ImageGallery searchString={this.state.searchingThing} />
