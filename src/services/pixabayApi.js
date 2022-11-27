@@ -8,7 +8,7 @@ axios.defaults.baseURL = 'https://pixabay.com/api/';
 const pixabayOptions = {
   image_type: 'photo',
   orientation: 'horizontal',
-  per_page: 3,
+  per_page: 8,
   safesearch: true,
 };
 

@@ -1,25 +1,21 @@
-// import PropTypes from 'prop-types';
-import Button from '../Button';
-import ImageGalleryItem from '../ImageGalleryItem';
 import React, { PureComponent } from 'react';
+//! import PropTypes from 'prop-types';
+
+import {
+  mashineStatus,
+  GALLERY_SCROLL_TIMEOUT,
+  galleryScrollOptions,
+} from '../../services/options';
 import { fetchData } from '../../services';
 
-const mashineStatus = {
-  IDLE: 'idle',
-  LOADING: 'loading',
-  SUCCESSFULLY: 'successfully',
-  ERROR: 'error',
-};
+import Button from '../Button';
+import ImageGalleryItem from '../ImageGalleryItem';
 
-const GALLERY_SCROLL_TIMEOUT = 1000;
-const galleryScrollOptions = {
-  behavior: 'smooth',
-  block: 'start',
-  inline: 'start',
-};
+import { ImageGalleryStyled } from './ImageGallery.styled';
 
 export default class ImageGallery extends PureComponent {
-  // static propTypes = {second: third}
+  //! static propTypes = {second: third}
+
   state = {
     query: '',
     page: 1,
@@ -83,10 +79,10 @@ export default class ImageGallery extends PureComponent {
 
     // Check state for changing page number
     if (prevState.page !== this.state.page) {
-      this.getImages();
+      await this.getImages();
 
       // Scrolling next page func
-      this.scrollNextPage();
+       this.scrollNextPage();
     }
   }
 
@@ -95,7 +91,7 @@ export default class ImageGallery extends PureComponent {
 
     return (
       <>
-        <ul className="gallery">
+        <ImageGalleryStyled className="gallery">
           {searchData.map(({ id, webformatURL, largeImageURL, tags }) => (
             <ImageGalleryItem
               key={id}
@@ -104,7 +100,7 @@ export default class ImageGallery extends PureComponent {
               tags={tags}
             />
           ))}
-        </ul>
+        </ImageGalleryStyled>
 
         {status === mashineStatus.IDLE && (
           <div>

@@ -1,5 +1,9 @@
 import Modal from '../Modal';
 import React, { PureComponent } from 'react';
+import {
+  ImageGalleryItemStyled,
+  ImageGalleryItemImageStyled,
+} from './ImageGalleryItem.styled';
 
 class ImageGalleryItem extends PureComponent {
   state = {
@@ -15,9 +19,14 @@ class ImageGalleryItem extends PureComponent {
     const { smallImageURL, fullSizedImageURL, tags } = this.props;
     return (
       <>
-        <li className="gallery-item" onClick={this.toggleModal}>
-          <img src={smallImageURL} alt={tags} loading="lasy" />
-        </li>
+        <ImageGalleryItemStyled onClick={this.toggleModal}>
+          <ImageGalleryItemImageStyled
+            src={smallImageURL}
+            alt={tags}
+            loading="lasy"
+          />
+        </ImageGalleryItemStyled>
+
         {openModal && (
           <Modal>
             <img src={fullSizedImageURL} alt={tags} />

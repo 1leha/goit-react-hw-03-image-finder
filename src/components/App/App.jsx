@@ -1,7 +1,6 @@
 import React, { PureComponent } from 'react';
 
 import GlobalStyle from '../GlobalStyle';
-import Box from '../Box';
 import AppStyled from './App.styled';
 
 import Searchbar from '../Searchbar';
