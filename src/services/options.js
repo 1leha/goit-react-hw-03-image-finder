@@ -5,9 +5,9 @@ export const mashineStatus = {
   ERROR: 'error',
 };
 
-export const GALLERY_SCROLL_TIMEOUT = 1000;
-export const galleryScrollOptions = {
-  behavior: 'smooth',
-  block: 'start',
-  inline: 'start',
-};
+export const GALLERY_SCROLL_TIMEOUT = 250;
+// export const galleryScrollOptions = {
+//   behavior: 'smooth',
+//   left: 0,
+//   top: firstImg.offsetTop - 84,
+// };

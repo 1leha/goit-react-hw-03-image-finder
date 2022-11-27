@@ -1,15 +1,14 @@
 import React, { PureComponent } from 'react';
 //! import PropTypes from 'prop-types';
 
-import {
-  mashineStatus,
-  GALLERY_SCROLL_TIMEOUT,
-  galleryScrollOptions,
-} from '../../services/options';
+import { mashineStatus, GALLERY_SCROLL_TIMEOUT } from '../../services/options';
 import { fetchData } from '../../services';
+import { message } from '../../services/messages';
 
+import Box from '../Box';
 import Button from '../Button';
 import ImageGalleryItem from '../ImageGalleryItem';
+import IdleScreen from './IdlrScreen/';
 
 import { ImageGalleryStyled } from './ImageGallery.styled';
 
@@ -26,11 +25,16 @@ export default class ImageGallery extends PureComponent {
   };
 
   scrollNextPage = () => {
+    //! Тут три дні мучався, але вийшов скролл якось так... Не знаю вірно чи ні, але працює :)
     setTimeout(() => {
       const url = this.state.firstImgUrlInFetch;
       const firstImg = document.querySelector(`img[src="${url}"]`);
 
-      firstImg.scrollIntoView(galleryScrollOptions);
+      window.scroll({
+        behavior: 'smooth',
+        left: 0,
+        top: firstImg.offsetTop - 84,
+      });
     }, GALLERY_SCROLL_TIMEOUT);
   };
 
@@ -82,7 +86,7 @@ export default class ImageGallery extends PureComponent {
       await this.getImages();
 
       // Scrolling next page func
-       this.scrollNextPage();
+      this.scrollNextPage();
     }
   }
 
@@ -91,7 +95,7 @@ export default class ImageGallery extends PureComponent {
 
     return (
       <>
-        <ImageGalleryStyled className="gallery">
+        <ImageGalleryStyled>
           {searchData.map(({ id, webformatURL, largeImageURL, tags }) => (
             <ImageGalleryItem
               key={id}
@@ -103,11 +107,7 @@ export default class ImageGallery extends PureComponent {
         </ImageGalleryStyled>
 
         {status === mashineStatus.IDLE && (
-          <div>
-            Welcome to my searchin image App! Here, you can find any images you
-            want... And may be, a little more... May be, you can find yourself
-            here! ;)
-          </div>
+          <IdleScreen>{message.IDLE}</IdleScreen>
         )}
 
         {status === mashineStatus.LOADING && <div>Loading {query}...</div>}
