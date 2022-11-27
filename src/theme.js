@@ -7,7 +7,7 @@ export const theme = {
   colors: {
     appBGColor: '#eaeeff',
 
-    primary: 'black',
+    primary: '#3f51b5',
     secondary: 'white',
     third: '#797979',
     notification: '#999999',

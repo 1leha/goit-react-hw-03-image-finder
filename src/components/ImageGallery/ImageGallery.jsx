@@ -1,16 +1,17 @@
 import React, { PureComponent } from 'react';
+import { MutatingDots } from 'react-loader-spinner';
 //! import PropTypes from 'prop-types';
 
 import { mashineStatus, GALLERY_SCROLL_TIMEOUT } from '../../services/options';
 import { fetchData } from '../../services';
 import { message } from '../../services/messages';
 
-import Box from '../Box';
 import Button from '../Button';
 import ImageGalleryItem from '../ImageGalleryItem';
 import IdleScreen from './IdlrScreen/';
 
 import { ImageGalleryStyled } from './ImageGallery.styled';
+import Modal from '../Modal';
 
 export default class ImageGallery extends PureComponent {
   //! static propTypes = {second: third}
@@ -91,7 +92,7 @@ export default class ImageGallery extends PureComponent {
   }
 
   render() {
-    const { status, searchData, query, error } = this.state;
+    const { status, searchData, error } = this.state;
 
     return (
       <>
@@ -110,7 +111,23 @@ export default class ImageGallery extends PureComponent {
           <IdleScreen>{message.IDLE}</IdleScreen>
         )}
 
-        {status === mashineStatus.LOADING && <div>Loading {query}...</div>}
+        {status === mashineStatus.LOADING && (
+          <div>
+            <Modal>
+              <MutatingDots
+                height="100"
+                width="100"
+                color="#fff"
+                secondaryColor="#fff"
+                radius="12.5"
+                ariaLabel="mutating-dots-loading"
+                wrapperStyle={{}}
+                wrapperClass=""
+                visible={true}
+              />
+            </Modal>
+          </div>
+        )}
 
         {status === mashineStatus.ERROR && <div>{error}</div>}
 
@@ -123,45 +140,3 @@ export default class ImageGallery extends PureComponent {
     );
   }
 }
-
-//----------------------------------------------
-// Render mashine
-//----------------------------------------------
-
-// if (status === mashineStatus.IDLE) {
-//   return (
-//     <div>
-//       Welcome to my searchin image App! Here, you can find any images you
-//       want... And may be, a little more... May be, you can find yourself
-//       here! ;)
-//     </div>
-//   );
-// }
-
-// if (status === mashineStatus.LOADING) {
-//   return <div>Loading {searchRequest}...</div>;
-// }
-
-// if (status === mashineStatus.SUCCESSFULLY) {
-//   return (
-//     <>
-//       <ul className="gallery">
-//         {searchData.map(({ id, webformatURL, largeImageURL, tags }) => (
-//           <ImageGalleryItem
-//             key={id}
-//             smallImageURL={webformatURL}
-//             fullSizedImageURL={largeImageURL}
-//             tags={tags}
-//           />
-//         ))}
-//       </ul>
-//       {/* {console.log('link to firstImgInNewFetch2 :>> ', firstImgUrlInFetch)} */}
-
-//       <Button onClick={this.nextPage} />
-//     </>
-//   );
-// }
-
-// if (status === mashineStatus.ERROR) {
-//   return <div>{error}</div>;
-// }
