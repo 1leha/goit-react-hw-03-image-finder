@@ -18,6 +18,4 @@ export const fetchData = async (request, page) => {
 
   const respone = await axios.get(url);
   return respone.data;
-
-  // console.log('url :>> ', url);
 };
