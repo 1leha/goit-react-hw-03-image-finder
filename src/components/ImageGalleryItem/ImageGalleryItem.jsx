@@ -28,7 +28,7 @@ class ImageGalleryItem extends PureComponent {
         </ImageGalleryItemStyled>
 
         {openModal && (
-          <Modal>
+          <Modal toggleModal={this.toggleModal}>
             <img src={fullSizedImageURL} alt={tags} />
           </Modal>
         )}

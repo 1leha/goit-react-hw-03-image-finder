@@ -1,19 +1,31 @@
 import React, { PureComponent } from 'react';
 import { createPortal } from 'react-dom';
+import { OverlayStyled, ModalStyled } from './Modal.styled';
 
-//TODO
 const modalRoot = document.getElementById('modal-root');
 
 class Modal extends PureComponent {
+  closeModal = e => {
+    if (e.code === 'Escape' || e.currentTarget === e.target) {
+      this.props.toggleModal();
+    }
+  };
+
+  componentDidMount() {
+    window.addEventListener('keydown', this.closeModal);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.closeModal);
+  }
+
   render() {
     const { children } = this.props;
 
-    console.log('modalRoot :>> ', modalRoot);
-
     return createPortal(
-      <div className="overlay">
-        <div className="modal">{children}</div>
-      </div>,
+      <OverlayStyled onClick={this.closeModal}>
+        <ModalStyled>{children}</ModalStyled>
+      </OverlayStyled>,
       modalRoot
     );
   }
