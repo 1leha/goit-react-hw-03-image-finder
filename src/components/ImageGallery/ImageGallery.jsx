@@ -1,5 +1,4 @@
 import React, { PureComponent } from 'react';
-import { MutatingDots } from 'react-loader-spinner';
 
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -19,7 +18,7 @@ import ImageGalleryItem from '../ImageGalleryItem';
 import IdleScreen from './IdleScreen';
 
 import { ImageGalleryStyled } from './ImageGallery.styled';
-import Modal from '../Modal';
+import Loader from 'components/Loader';
 
 export default class ImageGallery extends PureComponent {
   //! static propTypes = {second: third}
@@ -78,13 +77,9 @@ export default class ImageGallery extends PureComponent {
       const imagesLeft =
         hits.length === pixabayOptions.per_page
           ? data.totalHits - pixabayOptions.per_page * this.state.page
-          : data.totalHits;
+          : 0;
 
       toast.info(`Total found: ${data.totalHits}. Images left: ${imagesLeft}.`);
-
-      console.log('data.totalHits  :>> ', data.totalHits);
-      console.log('hits.length :>> ', hits.length);
-      console.log('pixabayOptions.per_page :>> ', pixabayOptions.per_page);
 
       this.setState(prevState => ({
         searchData: [...prevState.searchData, ...hits],
@@ -145,23 +140,7 @@ export default class ImageGallery extends PureComponent {
           <IdleScreen>{message.IDLE}</IdleScreen>
         )}
 
-        {status === mashineStatus.LOADING && (
-          <div>
-            <Modal>
-              <MutatingDots
-                height="100"
-                width="100"
-                color="#fff"
-                secondaryColor="#fff"
-                radius="12.5"
-                ariaLabel="mutating-dots-loading"
-                wrapperStyle={{}}
-                wrapperClass=""
-                visible={true}
-              />
-            </Modal>
-          </div>
-        )}
+        {status === mashineStatus.LOADING && <Loader />}
 
         {/* {status === mashineStatus.ERROR && <Modal>{error}</Modal>} */}
 

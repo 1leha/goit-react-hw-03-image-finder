@@ -6,6 +6,10 @@ const modalRoot = document.getElementById('modal-root');
 
 class Modal extends PureComponent {
   closeModal = e => {
+    if (this.props.toggleModal === undefined) {
+      return;
+    }
+
     if (e.code === 'Escape' || e.currentTarget === e.target) {
       this.props.toggleModal();
     }
