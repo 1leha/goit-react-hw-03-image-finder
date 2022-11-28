@@ -60,10 +60,8 @@ export default class ImageGallery extends PureComponent {
 
     try {
       const data = await fetchData(this.props.searchString, this.state.page);
-      console.log('data :>> ', data);
 
       const hits = await data.hits;
-      console.log('hits :>> ', hits.length);
 
       // NoImages found check
       if (!hits.length || hits.length !== pixabayOptions.per_page) {
@@ -76,10 +74,7 @@ export default class ImageGallery extends PureComponent {
       }
 
       const url = await hits[0].webformatURL;
-      console.log(
-        'hits.length === pixabayOptions.per_page :>> ',
-        hits.length === pixabayOptions.per_page
-      );
+
       const imagesLeft =
         hits.length === pixabayOptions.per_page
           ? data.totalHits - pixabayOptions.per_page * this.state.page
@@ -122,7 +117,7 @@ export default class ImageGallery extends PureComponent {
       await this.getImages();
 
       // Scrolling next page func
-      // this.scrollNextPage();
+      this.scrollNextPage();
     }
   }
 
