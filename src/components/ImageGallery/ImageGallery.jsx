@@ -1,14 +1,22 @@
 import React, { PureComponent } from 'react';
 import { MutatingDots } from 'react-loader-spinner';
+
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 //! import PropTypes from 'prop-types';
 
-import { mashineStatus, GALLERY_SCROLL_TIMEOUT } from '../../services/options';
+import {
+  mashineStatus,
+  GALLERY_SCROLL_TIMEOUT,
+  pixabayOptions,
+} from '../../services/options';
 import { fetchData } from '../../services';
 import { message } from '../../services/messages';
 
 import Button from '../Button';
 import ImageGalleryItem from '../ImageGalleryItem';
-import IdleScreen from './IdlrScreen/';
+import IdleScreen from './IdleScreen';
 
 import { ImageGalleryStyled } from './ImageGallery.styled';
 import Modal from '../Modal';
@@ -23,10 +31,11 @@ export default class ImageGallery extends PureComponent {
     firstImgUrlInFetch: '',
     status: mashineStatus.IDLE,
     error: '',
+    loadMoreBtnVisibility: false,
   };
 
   scrollNextPage = () => {
-    //! Тут три дні мучався, але вийшов скролл якось так... Не знаю вірно чи ні, але працює :)
+    //! Тут три дні мучався, зробив  скролл якось так... Не знаю вірно чи ні, але працює :)
     setTimeout(() => {
       const url = this.state.firstImgUrlInFetch;
       const firstImg = document.querySelector(`img[src="${url}"]`);
@@ -51,18 +60,44 @@ export default class ImageGallery extends PureComponent {
 
     try {
       const data = await fetchData(this.props.searchString, this.state.page);
+      console.log('data :>> ', data);
+
       const hits = await data.hits;
+      console.log('hits :>> ', hits.length);
+
+      // NoImages found check
+      if (!hits.length || hits.length !== pixabayOptions.per_page) {
+        toast.info(`No images found!`);
+        this.setState({
+          status: mashineStatus.SUCCESSFULLY,
+          loadMoreBtnVisibility: false,
+        });
+        return;
+      }
+
       const url = await hits[0].webformatURL;
+      console.log(
+        'hits.length === pixabayOptions.per_page :>> ',
+        hits.length === pixabayOptions.per_page
+      );
+      const imagesLeft =
+        hits.length === pixabayOptions.per_page
+          ? data.totalHits - pixabayOptions.per_page * this.state.page
+          : data.totalHits;
+
+      toast.info(`Total found: ${data.totalHits}. Images left: ${imagesLeft}.`);
 
       this.setState(prevState => ({
         searchData: [...prevState.searchData, ...hits],
         firstImgUrlInFetch: url,
         status: mashineStatus.SUCCESSFULLY,
+        loadMoreBtnVisibility: data.totalHits > hits.length ? true : false,
       }));
     } catch (error) {
+      toast.error(`${error.code}: ${error.message}`);
       this.setState({
-        status: mashineStatus.ERROR,
-        error: error.code,
+        status: mashineStatus.SUCCESSFULLY,
+        error: `${error.code}: ${error.message}`,
       });
     }
   };
@@ -87,13 +122,12 @@ export default class ImageGallery extends PureComponent {
       await this.getImages();
 
       // Scrolling next page func
-      this.scrollNextPage();
+      // this.scrollNextPage();
     }
   }
 
   render() {
-    const { status, searchData, error } = this.state;
-
+    const { status, searchData, loadMoreBtnVisibility } = this.state;
     return (
       <>
         <ImageGalleryStyled>
@@ -129,13 +163,13 @@ export default class ImageGallery extends PureComponent {
           </div>
         )}
 
-        {status === mashineStatus.ERROR && <div>{error}</div>}
+        {/* {status === mashineStatus.ERROR && <Modal>{error}</Modal>} */}
 
-        {status === mashineStatus.SUCCESSFULLY && (
-          <>
-            <Button onClick={this.nextPage} />
-          </>
+        {status === mashineStatus.SUCCESSFULLY && loadMoreBtnVisibility && (
+          <Button onClick={this.nextPage} />
         )}
+
+        <ToastContainer />
       </>
     );
   }
