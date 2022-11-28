@@ -1,27 +1,38 @@
+// Libs
 import React, { PureComponent } from 'react';
-
+import PropTypes from 'prop-types';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-//! import PropTypes from 'prop-types';
-
+// Options
 import {
   mashineStatus,
   GALLERY_SCROLL_TIMEOUT,
   pixabayOptions,
 } from '../../services/options';
+
+// Services
 import { fetchData } from '../../services';
 import { message } from '../../services/messages';
 
+// Components
 import Button from '../Button';
 import ImageGalleryItem from '../ImageGalleryItem';
 import IdleScreen from './IdleScreen';
-
-import { ImageGalleryStyled } from './ImageGallery.styled';
 import Loader from 'components/Loader';
 
+// Styled Components
+import { ImageGalleryStyled } from './ImageGallery.styled';
+
 export default class ImageGallery extends PureComponent {
-  //! static propTypes = {second: third}
+  static propTypes = {
+    searchString: PropTypes.string,
+    searchData: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.number.isRequired,
+      })
+    ),
+  };
 
   state = {
     query: '',
@@ -36,7 +47,8 @@ export default class ImageGallery extends PureComponent {
   scrollNextPage = () => {
     //! Тут три дні мучався, зробив  скролл якось так... Не знаю вірно чи ні, але працює :)
     setTimeout(() => {
-      const url = this.state.firstImgUrlInFetch;
+      const { firstImgUrlInFetch } = this.state;
+      const url = firstImgUrlInFetch;
       const firstImg = document.querySelector(`img[src="${url}"]`);
 
       window.scroll({
@@ -48,11 +60,12 @@ export default class ImageGallery extends PureComponent {
   };
 
   nextPage = e => {
-    // e.preventDefault();
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   getImages = async () => {
+    const { page } = this.state;
+
     this.setState({
       status: mashineStatus.LOADING,
     });
@@ -71,28 +84,34 @@ export default class ImageGallery extends PureComponent {
         });
         return;
       }
-
+      // Get url for the first image of new page
       const url = await hits[0].webformatURL;
 
+      // Calculating Total images found and left images in base
+      const imagesPerPage = pixabayOptions.per_page;
+      const imagesInFetch = hits.length;
+      const totalImages = data.totalHits;
+      const pageNumber = page;
+
       const imagesLeft =
-        hits.length === pixabayOptions.per_page
-          ? data.totalHits - pixabayOptions.per_page * this.state.page
+        imagesInFetch === imagesPerPage
+          ? totalImages - imagesPerPage * pageNumber
           : 0;
 
+      // Making a Toast :)
       toast.info(`Total found: ${data.totalHits}. Images left: ${imagesLeft}.`);
 
-      this.setState(prevState => ({
-        searchData: [...prevState.searchData, ...hits],
+      this.setState(({ searchData }) => ({
+        searchData: [...searchData, ...hits],
         firstImgUrlInFetch: url,
         status: mashineStatus.SUCCESSFULLY,
-        loadMoreBtnVisibility:
-          hits.length >= pixabayOptions.per_page ? true : false,
+        loadMoreBtnVisibility: imagesInFetch >= imagesPerPage ? true : false,
       }));
-    } catch (error) {
-      toast.error(`${error.code}: ${error.message}`);
+    } catch ({ code, message }) {
+      toast.error(`${code}: ${message}`);
       this.setState({
         status: mashineStatus.SUCCESSFULLY,
-        error: `${error.code}: ${error.message}`,
+        error: `${code}: ${message}`,
       });
     }
   };
@@ -101,6 +120,7 @@ export default class ImageGallery extends PureComponent {
     // Reset state when have new query and getting images
     const prevSearch = prevProps.searchString;
     const { searchString: currentSearch } = this.props;
+    const { page } = this.state;
 
     if (prevSearch !== currentSearch) {
       this.setState({
@@ -113,7 +133,7 @@ export default class ImageGallery extends PureComponent {
     }
 
     // Check state for changing page number
-    if (prevState.page !== this.state.page) {
+    if (prevState.page !== page) {
       await this.getImages();
 
       // Scrolling next page func
@@ -142,6 +162,7 @@ export default class ImageGallery extends PureComponent {
 
         {status === mashineStatus.LOADING && <Loader />}
 
+        {/* Place for render ERROR container if it need */}
         {/* {status === mashineStatus.ERROR && <Modal>{error}</Modal>} */}
 
         {status === mashineStatus.SUCCESSFULLY && loadMoreBtnVisibility && (

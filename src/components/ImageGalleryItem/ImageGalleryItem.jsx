@@ -1,11 +1,19 @@
 import Modal from '../Modal';
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
+
 import {
   ImageGalleryItemStyled,
   ImageGalleryItemImageStyled,
 } from './ImageGalleryItem.styled';
 
 class ImageGalleryItem extends PureComponent {
+  static propTypes = {
+    smallImageURL: PropTypes.string.isRequired,
+    fullSizedImageURL: PropTypes.string.isRequired,
+    tags: PropTypes.string.isRequired,
+  };
+
   state = {
     openModal: false,
   };

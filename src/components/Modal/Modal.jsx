@@ -1,17 +1,25 @@
 import React, { PureComponent } from 'react';
 import { createPortal } from 'react-dom';
+import PropTypes from 'prop-types';
+
 import { OverlayStyled, ModalStyled } from './Modal.styled';
 
 const modalRoot = document.getElementById('modal-root');
 
 class Modal extends PureComponent {
+  static propTypes = {
+    children: PropTypes.node,
+  };
+
   closeModal = e => {
-    if (this.props.toggleModal === undefined) {
+    const { toggleModal } = this.props;
+
+    if (toggleModal === undefined) {
       return;
     }
 
     if (e.code === 'Escape' || e.currentTarget === e.target) {
-      this.props.toggleModal();
+      toggleModal();
     }
   };
 
