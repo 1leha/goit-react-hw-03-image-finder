@@ -49,7 +49,7 @@ export default class ImageGallery extends PureComponent {
   };
 
   nextPage = e => {
-    e.preventDefault();
+    // e.preventDefault();
     this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
@@ -64,7 +64,7 @@ export default class ImageGallery extends PureComponent {
       const hits = await data.hits;
 
       // NoImages found check
-      if (!hits.length || hits.length !== pixabayOptions.per_page) {
+      if (!hits.length) {
         toast.info(`No images found!`);
         this.setState({
           status: mashineStatus.SUCCESSFULLY,
@@ -82,11 +82,16 @@ export default class ImageGallery extends PureComponent {
 
       toast.info(`Total found: ${data.totalHits}. Images left: ${imagesLeft}.`);
 
+      console.log('data.totalHits  :>> ', data.totalHits);
+      console.log('hits.length :>> ', hits.length);
+      console.log('pixabayOptions.per_page :>> ', pixabayOptions.per_page);
+
       this.setState(prevState => ({
         searchData: [...prevState.searchData, ...hits],
         firstImgUrlInFetch: url,
         status: mashineStatus.SUCCESSFULLY,
-        loadMoreBtnVisibility: data.totalHits > hits.length ? true : false,
+        loadMoreBtnVisibility:
+          hits.length >= pixabayOptions.per_page ? true : false,
       }));
     } catch (error) {
       toast.error(`${error.code}: ${error.message}`);
