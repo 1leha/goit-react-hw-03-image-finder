@@ -20,10 +20,10 @@ const Searchbar = ({ onSubmit }) => {
 
   return (
     <SearchbarStyled>
-      <Formik initialValues={{ searchingThing: '' }} onSubmit={handlerSubmit}>
+      <Formik initialValues={{ query: '' }} onSubmit={handlerSubmit}>
         {/* Parttern  "Render props" */}
         {props => {
-          const searchStringIsEmpty = props.values.searchingThing === '';
+          const searchStringIsEmpty = props.values.query === '';
 
           return (
             <SearchFormStyled>
@@ -44,7 +44,7 @@ const Searchbar = ({ onSubmit }) => {
                 autoComplete="off"
                 autoFocus
                 placeholder="Search images and photos"
-                name="searchingThing"
+                name="query"
               />
             </SearchFormStyled>
           );
